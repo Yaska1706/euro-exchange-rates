@@ -37,12 +37,14 @@ func DBConnection() *sql.DB {
 
 func SeedDB(db *sql.DB) error {
 	log.Print("💾 Seeding database with table...")
+	// db.Exec(`DROP TABLE IF EXISTS "public"."rates"`)
+
 	_, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS "public"."rates" (
 			"id"      SERIAL PRIMARY KEY,
 			"currency"    varchar(50) NOT NULL,
 			"date"   varchar(50) NOT NULL,
-			"rate"    INT
+			"rate"    varchar(50) NOT NULL
 		)
 	`)
 
