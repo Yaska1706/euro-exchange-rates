@@ -31,16 +31,24 @@ func DBConnection() *sql.DB {
 		panic(err)
 	}
 
-	fmt.Println("Successfully connected!")
 	return db
 }
 
+func deletestableifexists(db *sql.DB) {
+	log.Print("Deleting existing table...")
+	_, err := db.Exec(`DROP TABLE rates`)
+	if err != nil {
+		log.Print("error:", err)
+		return
+	}
+}
+
 func SeedDB(db *sql.DB) error {
+	deletestableifexists(db)
 	log.Print("💾 Seeding database with table...")
-	// db.Exec(`DROP TABLE IF EXISTS "public"."rates"`)
 
 	_, err := db.Exec(`
-		CREATE TABLE IF NOT EXISTS "public"."rates" (
+		CREATE TABLE IF NOT EXISTS rates (
 			"id"      SERIAL PRIMARY KEY,
 			"currency"    varchar(50) NOT NULL,
 			"date"   varchar(50) NOT NULL,
