@@ -2,51 +2,60 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/yaska1706/rakuten-interview/api"
 	"github.com/yaska1706/rakuten-interview/db"
 )
 
-func main() {
-
+func init() {
 	DB := db.DBConnection()
-
 	db.SeedDB(DB)
-	usingxmlquery(DB)
+	SaveXMLToDB(DB)
+}
+func main() {
+	router := http.NewServeMux()
+	serve := api.NewServer(router)
+	serve.Run()
 }
 
-type CurrencyTime struct {
-	Currency string
-	Rate     string
-}
-type CurrencyValues struct {
-	Time         string
-	CurrencyTime []CurrencyTime
-}
-
-func usingxmlquery(DB *sql.DB) {
+func queryxmldata() []db.CurrencyRate {
 	doc, err := xmlquery.LoadURL("https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml")
 	if err != nil {
 		log.Print(err)
 	}
+	currencyrates := []db.CurrencyRate{}
+	var datetime string
 
 	lists, _ := xmlquery.QueryAll(doc, "//Cube//Cube")
-	var datetime string
+
 	for _, list := range lists {
+		var currencyrate db.CurrencyRate
 
 		if list.SelectAttr("time") == "" {
 			continue
 		}
-		fmt.Printf("Time: %s\n", list.SelectAttr("time"))
 		datetime = list.SelectAttr("time")
 		for _, value := range list.SelectElements("//Cube") {
 			if value.SelectAttr("currency") == "" || value.SelectAttr("currency") == "" {
 				continue
 			}
-			fmt.Printf("Currency: %s Rate %s\n", value.SelectAttr("currency"), value.SelectAttr("rate"))
-			db.Create(DB, value.SelectAttr("currency"), value.SelectAttr("rate"), datetime)
+
+			currencyrate.Date = datetime
+			currencyrate.Currency = value.SelectAttr("currency")
+			currencyrate.Rate = value.SelectAttr("rate")
+
 		}
+		currencyrates = append(currencyrates, currencyrate)
+	}
+	return currencyrates
+}
+
+func SaveXMLToDB(DB *sql.DB) {
+	currencyrates := queryxmldata()
+	for _, currencyrate := range currencyrates {
+		db.Create(DB, currencyrate)
 	}
 }
