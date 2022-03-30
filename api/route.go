@@ -1,39 +1,17 @@
 package api
 
 import (
-	"database/sql"
 	"net/http"
 )
 
-type Server struct {
-	db *sql.DB
-}
+func (s *server) routes() *http.ServeMux {
+	router := s.router
 
-func (rh *rateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "application/json")
-	switch {
-	case r.Method == http.MethodGet:
-		rh.GetLatest(w, r)
-		return
-	case r.Method == http.MethodGet:
-		rh.GetSpecificDate(w, r)
-		return
-	case r.Method == http.MethodGet:
-		rh.AnalyzeRates(w, r)
-		return
-	default:
-		notFound(w, r)
-		return
-	}
-}
-
-func Serve() {
-	rateHandler := rateHandler{}
-	mux := http.NewServeMux()
-	mux.HandleFunc("/rates/latest", rateHandler.GetLatest)
-	mux.HandleFunc("/rates/analyze", rateHandler.AnalyzeRates)
-	http.ListenAndServe(":8080", mux)
-
+	router.HandleFunc("/status", s.ApiStatus())
+	router.HandleFunc("/rates/latest", s.GetLatest())
+	router.HandleFunc("/rates/:date", s.GetSpecificDate())
+	router.HandleFunc("/rates/analyze", s.AnalyzeRates())
+	return router
 }
 
 func internalServerError(w http.ResponseWriter, r *http.Request) {

@@ -1,8 +1,9 @@
 package api
 
 import (
-	"net/http"
-	"sync"
+	"time"
+
+	"github.com/yaska1706/rakuten-interview/db"
 )
 
 type ExchangeRate struct {
@@ -11,18 +12,45 @@ type ExchangeRate struct {
 	Rate     string `json:"rate"`
 }
 
-type rateHandler struct {
-	*sync.Mutex
+func getlatestdate() string {
+	t := time.Now()
+	currentDate := t.Format("2006-03-30")
+
+	return currentDate
 }
 
-func (rh *rateHandler) GetLatest(w http.ResponseWriter, r *http.Request) {
+func returnlatestrates() []ExchangeRate {
+	DB := db.DBConnection()
+	server := &server{
+		db: DB,
+	}
+	var exchangeRates []ExchangeRate
 
+	date := getlatestdate()
+	latestcurrencyrates := db.GetByDate(server.db, date)
+	for _, latestcurrencyrate := range latestcurrencyrates {
+		exchangeRate := ExchangeRate{
+			Currency: latestcurrencyrate.Currency,
+			Rate:     latestcurrencyrate.Rate,
+		}
+		exchangeRates = append(exchangeRates, exchangeRate)
+	}
+	return exchangeRates
 }
 
-func (rh *rateHandler) GetSpecificDate(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func (rh *rateHandler) AnalyzeRates(w http.ResponseWriter, r *http.Request) {
-
+func returnratesperdate(date string) []ExchangeRate {
+	DB := db.DBConnection()
+	server := &server{
+		db: DB,
+	}
+	var exchangeRates []ExchangeRate
+	latestcurrencyrates := db.GetByDate(server.db, date)
+	for _, latestcurrencyrate := range latestcurrencyrates {
+		exchangeRate := ExchangeRate{
+			Currency: latestcurrencyrate.Currency,
+			Rate:     latestcurrencyrate.Rate,
+		}
+		exchangeRates = append(exchangeRates, exchangeRate)
+	}
+	return exchangeRates
 }
