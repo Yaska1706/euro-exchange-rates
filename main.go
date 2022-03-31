@@ -6,11 +6,16 @@ import (
 	"net/http"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/joho/godotenv"
 	"github.com/yaska1706/rakuten-interview/api"
 	"github.com/yaska1706/rakuten-interview/db"
 )
 
 func init() {
+	// load .env file
+	if err := godotenv.Load(".env"); err != nil {
+		panic(err)
+	}
 	DB := db.DBConnection()
 	db.SeedDB(DB)
 	SaveXMLToDB(DB)

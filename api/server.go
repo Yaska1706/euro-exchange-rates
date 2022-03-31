@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -20,8 +21,12 @@ func NewServer(router *http.ServeMux) *server {
 
 func (s *server) Run() {
 
+	ADDR := os.Getenv("LISTEN_ADDRESS")
+	PORT := os.Getenv("LISTEN_PORT")
+	ListenADDR := ADDR + ":" + PORT
+
 	serve := &http.Server{
-		Addr:              "127.0.0.1:5000",
+		Addr:              ListenADDR,
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,
 		Handler:           s.routes(),

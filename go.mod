@@ -4,6 +4,8 @@ go 1.18
 
 require (
 	github.com/antchfx/xmlquery v1.3.10
+	github.com/gorilla/mux v1.8.0
+	github.com/joho/godotenv v1.4.0
 	github.com/lib/pq v1.10.4
 )
 
