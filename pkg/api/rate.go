@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/yaska1706/rakuten-interview/db"
+	"github.com/yaska1706/rakuten-interview/pkg/db"
 )
 
 type ExchangeRate struct {

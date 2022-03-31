@@ -7,8 +7,8 @@ import (
 	"github.com/antchfx/xmlquery"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
-	"github.com/yaska1706/rakuten-interview/api"
-	"github.com/yaska1706/rakuten-interview/db"
+	"github.com/yaska1706/rakuten-interview/pkg/api"
+	"github.com/yaska1706/rakuten-interview/pkg/db"
 )
 
 func init() {
