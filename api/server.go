@@ -26,7 +26,7 @@ func (s *server) Run() {
 		WriteTimeout:      10 * time.Second,
 		Handler:           s.routes(),
 	}
-	serve.ListenAndServe()
 	log.Print("App Running")
+	serve.ListenAndServe()
 
 }

@@ -9,7 +9,7 @@ func (s *server) routes() *http.ServeMux {
 
 	router.HandleFunc("/status", s.ApiStatus())
 	router.HandleFunc("/rates/latest", s.GetLatest())
-	router.HandleFunc("/rates/:date", s.GetSpecificDate())
+	router.HandleFunc("/rates/{date}", s.GetSpecificDate())
 	router.HandleFunc("/rates/analyze", s.AnalyzeRates())
 	return router
 }

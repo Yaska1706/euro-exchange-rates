@@ -13,8 +13,8 @@ type ExchangeRate struct {
 }
 
 func getlatestdate() string {
-	t := time.Now()
-	currentDate := t.Format("2006-03-30")
+	t := time.Now().Local()
+	currentDate := t.Format("2006-01-02")
 
 	return currentDate
 }
@@ -53,4 +53,43 @@ func returnratesperdate(date string) []ExchangeRate {
 		exchangeRates = append(exchangeRates, exchangeRate)
 	}
 	return exchangeRates
+}
+
+func returnAllRates() []ExchangeRate {
+	DB := db.DBConnection()
+	server := &server{
+		db: DB,
+	}
+	var exchangeRates []ExchangeRate
+	allrates := db.GetAllRates(server.db)
+	for _, allrate := range allrates {
+		exchangeRate := ExchangeRate{
+			Currency: allrate.Currency,
+			Rate:     allrate.Rate,
+		}
+		exchangeRates = append(exchangeRates, exchangeRate)
+	}
+	return exchangeRates
+}
+
+// func findMin(exchangerates []ExchangeRate) string {
+// 	exchangerates = returnAllRates()
+// 	for _, exchangerate := range exchangerates {
+// 		exchangerate.Currency
+// 	}
+// 	return ""
+// }
+
+func MinMax(array []string) (string, string) {
+	var max string = array[0]
+	var min string = array[0]
+	for _, value := range array {
+		if max < value {
+			max = value
+		}
+		if min > value {
+			min = value
+		}
+	}
+	return min, max
 }
