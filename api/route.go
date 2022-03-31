@@ -2,15 +2,17 @@ package api
 
 import (
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
-func (s *server) routes() *http.ServeMux {
+func (s *server) routes() *mux.Router {
 	router := s.router
 
 	router.HandleFunc("/status", s.ApiStatus())
-	router.HandleFunc("/rates/latest", s.GetLatest())
-	router.HandleFunc("/rates/{date}", s.GetSpecificDate())
+	router.HandleFunc("/rates/latest", s.GetLatest()).Methods("GET")
 	router.HandleFunc("/rates/analyze", s.AnalyzeRates())
+	// router.HandleFunc("/rates/{date}", s.GetSpecificDate())
 	return router
 }
 

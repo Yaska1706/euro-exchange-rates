@@ -6,14 +6,16 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 type server struct {
 	db     *sql.DB
-	router *http.ServeMux
+	router *mux.Router
 }
 
-func NewServer(router *http.ServeMux) *server {
+func NewServer(router *mux.Router) *server {
 	return &server{
 		router: router,
 	}

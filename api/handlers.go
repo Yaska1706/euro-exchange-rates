@@ -35,12 +35,10 @@ func (s *server) ApiStatus() http.HandlerFunc {
 
 func (s *server) GetLatest() http.HandlerFunc {
 
-	rates := []map[string]string{}
+	rates := map[string]string{}
 	latestrates := returnlatestrates()
 	for _, latestrate := range latestrates {
-		rates = append(rates, map[string]string{
-			latestrate.Currency: latestrate.Rate,
-		})
+		rates[latestrate.Currency] = latestrate.Rate
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +97,19 @@ func (s *server) AnalyzeRates() http.HandlerFunc {
 			notFound(w, r)
 			return
 		}
+
+		analysisresult := getMinMaxrates()
+
+		w.Header().Add("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		response := map[string]interface{}{
+			"base":          EUROfxREF,
+			"rates_analyze": analysisresult,
+		}
+		byteresp, _ := json.Marshal(response)
+
+		w.Write(byteresp)
 
 	}
 
