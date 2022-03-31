@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"regexp"
 
 	"github.com/gorilla/mux"
 )
@@ -113,4 +114,13 @@ func (s *server) AnalyzeRates() http.HandlerFunc {
 
 	}
 
+}
+
+func (s *server) HandleRequest(w http.ResponseWriter, r *http.Request, date string) bool {
+
+	re := regexp.MustCompile(`\d{4}-\d{2}-\d{2}`)
+
+	b := re.MatchString(date)
+
+	return b
 }

@@ -12,7 +12,7 @@ func (s *server) routes() *mux.Router {
 	router.HandleFunc("/status", s.ApiStatus())
 	router.HandleFunc("/rates/latest", s.GetLatest()).Methods("GET")
 	router.HandleFunc("/rates/analyze", s.AnalyzeRates())
-	// router.HandleFunc("/rates/{date}", s.GetSpecificDate())
+	router.HandleFunc("/rates/{date}", s.GetLatest())
 	return router
 }
 

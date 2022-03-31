@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -23,7 +22,6 @@ func Create(db *sql.DB, exrate CurrencyRate) {
 func GetByDate(db *sql.DB, date string) []CurrencyRate {
 	currencyrates := []CurrencyRate{}
 	rows, err := db.Query(`SELECT "currency", "rate" FROM "public"."rates" WHERE "date" = $1`, date)
-	fmt.Print(date)
 	if err != nil {
 		log.Print("error: ", err)
 	}
