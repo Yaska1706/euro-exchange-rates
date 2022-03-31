@@ -3,9 +3,9 @@ package main
 import (
 	"database/sql"
 	"log"
-	"net/http"
 
 	"github.com/antchfx/xmlquery"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/yaska1706/rakuten-interview/api"
 	"github.com/yaska1706/rakuten-interview/db"
@@ -22,7 +22,7 @@ func init() {
 
 }
 func main() {
-	router := http.NewServeMux()
+	router := mux.NewRouter()
 	serve := api.NewServer(router)
 	serve.Run()
 
