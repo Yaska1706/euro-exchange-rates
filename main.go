@@ -14,11 +14,13 @@ func init() {
 	DB := db.DBConnection()
 	db.SeedDB(DB)
 	SaveXMLToDB(DB)
+
 }
 func main() {
 	router := http.NewServeMux()
 	serve := api.NewServer(router)
 	serve.Run()
+
 }
 
 func queryxmldata() []db.CurrencyRate {
@@ -31,8 +33,8 @@ func queryxmldata() []db.CurrencyRate {
 
 	lists, _ := xmlquery.QueryAll(doc, "//Cube//Cube")
 
+	var currencyrate db.CurrencyRate
 	for _, list := range lists {
-		var currencyrate db.CurrencyRate
 
 		if list.SelectAttr("time") == "" {
 			continue
@@ -47,8 +49,8 @@ func queryxmldata() []db.CurrencyRate {
 			currencyrate.Currency = value.SelectAttr("currency")
 			currencyrate.Rate = value.SelectAttr("rate")
 
+			currencyrates = append(currencyrates, currencyrate)
 		}
-		currencyrates = append(currencyrates, currencyrate)
 	}
 	return currencyrates
 }
