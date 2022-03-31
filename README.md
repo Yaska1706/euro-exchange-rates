@@ -23,6 +23,10 @@ LISTEN_PORT = "8080"
 Edit the variables to your preference
 
 After configuring environment variables , run the application with the follow command
+#### install dependecies
+```make deps```
+
+#### run app
 
 ``` make run ```
 

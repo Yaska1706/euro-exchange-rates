@@ -1,3 +1,6 @@
+deps:
+	go mod tidy
+
 build:
 	go build -o bin/rakuten-interview cmd/main.go
 
