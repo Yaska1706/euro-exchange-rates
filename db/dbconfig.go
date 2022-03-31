@@ -34,20 +34,11 @@ func DBConnection() *sql.DB {
 	return db
 }
 
-func deletestableifexists(db *sql.DB) {
-	log.Print("Deleting existing table...")
-	_, err := db.Exec(`DROP TABLE rates`)
-	if err != nil {
-		log.Print("error:", err)
-		return
-	}
-}
-
 func SeedDB(db *sql.DB) error {
-	deletestableifexists(db)
 	log.Print("💾 Seeding database with table...")
 
 	_, err := db.Exec(`
+		DROP TABLE IF EXISTS rates;
 		CREATE TABLE IF NOT EXISTS rates (
 			"id"      SERIAL PRIMARY KEY,
 			"currency"    varchar(50) NOT NULL,

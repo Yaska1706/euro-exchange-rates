@@ -35,3 +35,20 @@ func GetByDate(db *sql.DB, date string) []CurrencyRate {
 	}
 	return currencyrates
 }
+
+func GetAllRates(db *sql.DB) []CurrencyRate {
+	currencyrates := []CurrencyRate{}
+	rows, err := db.Query(`SELECT "*" FROM "public"."rates"`)
+	if err != nil {
+		log.Print("error: ", err)
+	}
+	for rows.Next() {
+		currencyrate := CurrencyRate{}
+		if err := rows.Scan(&currencyrate.Currency, &currencyrate.Rate); err != nil {
+			log.Print("Error:", err)
+
+		}
+		currencyrates = append(currencyrates, currencyrate)
+	}
+	return currencyrates
+}
