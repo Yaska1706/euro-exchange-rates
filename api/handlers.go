@@ -3,16 +3,13 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 type Response struct {
 	Status string `json:"status"`
 	Data   string `json:"data"`
-}
-
-type Rate struct {
-	Name string
 }
 
 const (
@@ -71,15 +68,15 @@ func (s *server) GetSpecificDate() http.HandlerFunc {
 			notFound(w, r)
 			return
 		}
-		date := strings.TrimPrefix(r.URL.Path, "/rates/")
+		params := mux.Vars(r)
 
-		rates := []map[string]string{}
+		date := params["date"]
+
+		rates := map[string]string{}
 
 		latestrates := returnratesperdate(date)
 		for _, latestrate := range latestrates {
-			rates = append(rates, map[string]string{
-				latestrate.Currency: latestrate.Rate,
-			})
+			rates[latestrate.Currency] = latestrate.Rate
 		}
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -91,6 +88,7 @@ func (s *server) GetSpecificDate() http.HandlerFunc {
 		byteresp, _ := json.Marshal(response)
 
 		w.Write(byteresp)
+
 	}
 }
 
